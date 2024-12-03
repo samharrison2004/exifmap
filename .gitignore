@@ -1,3 +1,7 @@
 # Do not push the API key. You need to use your own, silly goose :D
 
 API_KEY.txt
+
+# Ignore test data file
+
+test_data/
