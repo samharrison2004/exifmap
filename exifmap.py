@@ -1,8 +1,11 @@
 ## Need requests library to download image file from server
 import requests
 
+## Needed to give the program command line functionality
+import argparse
+
 ## Needed to determine if imagefile is HEIC
-import os.path
+import os
 
 ## exif was deprecated in favour of pillow as it can handle more image formats
 ## from exif import Image
@@ -56,8 +59,10 @@ def extract_gps(exif_data):
     print (gpsinfo)
     '''
 image1 = ("test_data/image1.heic")
-exifdata = exif_data(image1)
-datetime = extract_datetime(exifdata)
-print(datetime)
-##def polyline(lat, long):
-##    return polyline
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-f","--folderpath", type=str, help = "The path of the folder containing the image files you wish to use. If not specified, exifmap will search in the current working directory")
+args = parser.parse_args()
+if args.folderpath:
+    os.chdir(args.folderpath)
+    print(os.getcwd())
