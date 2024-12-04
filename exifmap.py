@@ -16,6 +16,19 @@ from PIL.ExifTags import TAGS, GPSTAGS
 ## Needed to extract exif data from iphone HEIC file format
 from pillow_heif import register_heif_opener
 
+## Filetypes that pillow can process. Enables the program to filter invalid filetypes. Tuple to save memory
+accepted_filetypes = (".heic", ".png", ".jpeg", ".jpg", ".ppm", ".tiff", ".gif", ".bmp")
+
+def find_image_files(path, accepted_filetypes):
+    good_files = []
+    file_list = os.listdir(path)
+    for file in file_list:
+        file_extension = os.path.splitext(file)[1]
+        for good_file_ext in accepted_filetypes:
+            if file_extension == good_file_ext:
+                good_files.append(file)
+    return good_files
+
 def exif_data(image_path):
     exif_data = {}
     file_ext = os.path.splitext(image_path)[1]
@@ -48,9 +61,6 @@ def extract_gps(exif_data):
                 gps_decoded = GPSTAGS.get(t,t)
                 gps_info[gps_decoded] = value
         exif_table[decoded] = value
-
-    print (exif_table)
-    
     
     '''
     for key in exif_table["GPSInfo"].keys():
@@ -61,8 +71,21 @@ def extract_gps(exif_data):
 image1 = ("test_data/image1.heic")
 
 parser = argparse.ArgumentParser()
+
+## Argument for selecting the path of the folder containing the images the user wants to extract GPS data from. If none is provided exifmap will use the current working directory
 parser.add_argument("-f","--folderpath", type=str, help = "The path of the folder containing the image files you wish to use. If not specified, exifmap will search in the current working directory")
+
+## Argument for naming a file to output the polyline string to. If the flag is selected, the program will save the polyline to a text file named polyline.txt, unless the user specifies otherwise
+parser.add_argument("-p","--polyline", type=str, help = "Name of file to output polyline string to. If flag is used but no name is provided exifmap will name a file polyline.txt containing the polyline")
+
 args = parser.parse_args()
-if args.folderpath:
-    os.chdir(args.folderpath)
-    print(os.getcwd())
+
+user_wd = os.getcwd()
+
+if args.folderpath: ## If user selects specific directory
+    os.chdir(args.folderpath) ## Change directory to that specified by user
+    files_path = os.getcwd()
+else:
+    files_path = user_wd
+
+find_image_files(files_path, accepted_filetypes)
