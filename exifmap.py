@@ -7,7 +7,10 @@ import argparse
 ## Needed to determine if imagefile is HEIC
 import os
 
-## exif was deprecated in favour of pillow as it can handle more image formats
+## Needed to sort files by the datetime they were created
+from datetime import datetime
+
+## exif was deprecated in favour of pillow as it can handle more image formats (specifically the iPhone .heic format)
 ## from exif import Image
 
 from PIL import Image
@@ -43,14 +46,15 @@ def exif_data(image_path):
 def extract_datetime(exif_data):
     for tag, value in exif_data.items():
         decoded = TAGS.get(tag,tag)
-        if decoded == ("DateTime"):
+        if decoded == ("DateTime"): ## If the key is 'DateTime'
             datetime_str = value
-            date,time = datetime_str.split()
-            year,month,day = date.split(":")
+            date,time = datetime_str.split() ## Split the value by the space
+            year,month,day = date.split(":") 
             hour,minute,second = time.split(":")
             datetime = [year, month, day, hour, minute, second] ## Turns the data into a list going from year to second, left to right
             return(datetime)
 
+## Function for extracting GPS information from exif data 
 def extract_gps(exif_data):
     exif_table = {}
     for tag, value in exif_data.items():
@@ -61,7 +65,15 @@ def extract_gps(exif_data):
                 gps_decoded = GPSTAGS.get(t,t)
                 gps_info[gps_decoded] = value
         exif_table[decoded] = value
-    
+
+def sort_files(file_dictionary):
+    filenames = [*file_dictionary] ## Gets the key values of the dictionary object. Faster than using .keys() according to some bloke on stackexchange
+    sorted_filenames = filenames
+    for i in range(0,5): ## Iterate through year, month, day, hour, minute, second
+        for file in filenames:
+            if file_dictionary[file][i] > file_dictionary[next(file)][i]:
+                
+
     '''
     for key in exif_table["GPSInfo"].keys():
         decode = GPSTAGS.get(key,key)
@@ -80,12 +92,18 @@ parser.add_argument("-p","--polyline", type=str, help = "Name of file to output 
 
 args = parser.parse_args()
 
-user_wd = os.getcwd()
+user_wd = os.getcwd() ## Sets user working directory to the current working directory
 
 if args.folderpath: ## If user selects specific directory
     os.chdir(args.folderpath) ## Change directory to that specified by user
-    files_path = os.getcwd()
-else:
-    files_path = user_wd
+    files_path = os.getcwd() ## Set the filepath equal to that directory
+else: 
+    files_path = user_wd ## Set the filepath equal to current working directory
 
-find_image_files(files_path, accepted_filetypes)
+good_files = find_image_files(files_path, accepted_filetypes) ## Finds the 'good' files 
+files_by_date = {}
+for file in good_files:
+    file_exif_data = exif_data(file)
+    file_datetime = extract_datetime(file_exif_data)
+    files_by_date[file] = file_datetime
+sort_files(files_by_date)
