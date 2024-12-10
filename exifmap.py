@@ -47,12 +47,16 @@ def extract_datetime(exif_data):
     for tag, value in exif_data.items():
         decoded = TAGS.get(tag,tag)
         if decoded == ("DateTime"): ## If the key is 'DateTime'
+            
             datetime_str = value
+            return(datetime)
+            """
             date,time = datetime_str.split() ## Split the value by the space
             year,month,day = date.split(":") 
             hour,minute,second = time.split(":")
             datetime = [year, month, day, hour, minute, second] ## Turns the data into a list going from year to second, left to right
             return(datetime)
+            """
 
 ## Function for extracting GPS information from exif data 
 def extract_gps(exif_data):
@@ -67,13 +71,16 @@ def extract_gps(exif_data):
         exif_table[decoded] = value
 
 def sort_files(file_dictionary):
-    filenames = [*file_dictionary] ## Gets the key values of the dictionary object. Faster than using .keys() according to some bloke on stackexchange
-    sorted_filenames = filenames
-    for i in range(0,5): ## Iterate through year, month, day, hour, minute, second
-        for file in filenames:
-            if file_dictionary[file][i] > file_dictionary[next(file)][i]:
-                
-
+    sorted_filenames = []
+    datetime_format = "%y:%m:%d %H:%M:%S" ## The format the exif datetime comes in
+    datetime_list = file_dictionary.values()
+    datetime_list.sort(key = lambda x: datetime.strptime(x,datetime_format))
+    for i in len(datetime_list):
+        for file,datetime in file_dictionary:
+            if datetime == datetime_list[i]:
+                sorted_filenames.append(file)
+    return sorted_filenames
+    
     '''
     for key in exif_table["GPSInfo"].keys():
         decode = GPSTAGS.get(key,key)
@@ -102,6 +109,7 @@ else:
 
 good_files = find_image_files(files_path, accepted_filetypes) ## Finds the 'good' files 
 files_by_date = {}
+datetime_list = []
 for file in good_files:
     file_exif_data = exif_data(file)
     file_datetime = extract_datetime(file_exif_data)
