@@ -70,7 +70,7 @@ def extract_gps(exif_data):
                 gps_info[gps_decoded] = value
         exif_table[decoded] = value
 
-def sort_files(file_dictionary):
+def sort_files(file_dictionary, datetime):
     sorted_filenames = []
     datetime_format = "%y:%m:%d %H:%M:%S" ## The format the exif datetime comes in
     datetime_list = file_dictionary.values()
@@ -114,4 +114,4 @@ for file in good_files:
     file_exif_data = exif_data(file)
     file_datetime = extract_datetime(file_exif_data)
     files_by_date[file] = file_datetime
-sort_files(files_by_date)
+print(sort_files(files_by_date, datetime))
