@@ -74,8 +74,8 @@ def sort_files(file_dictionary):
     sorted_filenames = []
     datetime_format = "%y:%m:%d %H:%M:%S" ## The format the exif datetime comes in
     datetime_list = file_dictionary.values()
-    datetime_list.sort(key = lambda x: datetime.strptime(x,datetime_format))
-    for i in len(datetime_list):
+    datetime_list = sorted(datetime_list, key = lambda x: datetime.strptime(x,datetime_format))
+    for i in range(len(datetime_list)):
         for file,datetime in file_dictionary:
             if datetime == datetime_list[i]:
                 sorted_filenames.append(file)
