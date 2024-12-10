@@ -47,9 +47,8 @@ def extract_datetime(exif_data):
     for tag, value in exif_data.items():
         decoded = TAGS.get(tag,tag)
         if decoded == ("DateTime"): ## If the key is 'DateTime'
-            
             datetime_str = value
-            return(datetime)
+            return(datetime_str)
             """
             date,time = datetime_str.split() ## Split the value by the space
             year,month,day = date.split(":") 
@@ -71,14 +70,14 @@ def extract_gps(exif_data):
         exif_table[decoded] = value
 
 def sort_files(file_dictionary, datetime):
+    print(file_dictionary)
     sorted_filenames = []
-    datetime_format = "%y:%m:%d %H:%M:%S" ## The format the exif datetime comes in
-    datetime_list = file_dictionary.values()
-    datetime_list = sorted(datetime_list, key = lambda x: datetime.strptime(x,datetime_format))
-    for i in range(len(datetime_list)):
-        for file,datetime in file_dictionary:
-            if datetime == datetime_list[i]:
-                sorted_filenames.append(file)
+    datetime_format = ("%Y:%m:%d %H:%M:%S") ## The format the exif datetime comes in
+    sorted_dates = [date for date in sorted(file_dictionary.values(), key = lambda x: datetime.strptime(x,datetime_format))]
+    for date in sorted_dates:
+        for key, value in file_dictionary.items():
+            if value == date:
+                sorted_filenames.append(key)
     return sorted_filenames
     
     '''
@@ -109,7 +108,6 @@ else:
 
 good_files = find_image_files(files_path, accepted_filetypes) ## Finds the 'good' files 
 files_by_date = {}
-datetime_list = []
 for file in good_files:
     file_exif_data = exif_data(file)
     file_datetime = extract_datetime(file_exif_data)
