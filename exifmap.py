@@ -7,9 +7,8 @@ import argparse
 ## Needed to determine if imagefile is HEIC
 import os
 
-## Needed for calculating polylines
-import math
-from math import e
+## Needed for polylines
+import polyline
 
 ## Needed to sort files by the datetime they were created
 from datetime import datetime
@@ -25,12 +24,6 @@ from pillow_heif import register_heif_opener
 
 ## Filetypes that pillow can process. Enables the program to filter invalid filetypes. Tuple to save memory
 accepted_filetypes = (".heic", ".png", ".jpeg", ".jpg", ".ppm", ".tiff", ".gif", ".bmp")
-
-## Written using this article from google as a guide:
-## https://developers.google.com/maps/documentation/utilities/polylinealgorithm
-def calculate_polylines(coordinate, isEnd)
-    step1 = int(round(coordinate*exp(5))) ## Multiply by 1e5, rounding the result
-    step2 =  ## Convert to binary, twos complement if the original value is negative
 
 def find_image_files(path, accepted_filetypes): ## Takes command line input and tuple of accepted filetypes as arguments
     good_files = []
