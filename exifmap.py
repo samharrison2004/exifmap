@@ -7,6 +7,10 @@ import argparse
 ## Needed to determine if imagefile is HEIC
 import os
 
+## Needed for calculating polylines
+import math
+from math import e
+
 ## Needed to sort files by the datetime they were created
 from datetime import datetime
 
@@ -22,7 +26,13 @@ from pillow_heif import register_heif_opener
 ## Filetypes that pillow can process. Enables the program to filter invalid filetypes. Tuple to save memory
 accepted_filetypes = (".heic", ".png", ".jpeg", ".jpg", ".ppm", ".tiff", ".gif", ".bmp")
 
-def find_image_files(path, accepted_filetypes):
+## Written using this article from google as a guide:
+## https://developers.google.com/maps/documentation/utilities/polylinealgorithm
+def calculate_polylines(coordinate, isEnd)
+    step1 = int(round(coordinate*exp(5))) ## Multiply by 1e5, rounding the result
+    step2 =  ## Convert to binary, twos complement if the original value is negative
+
+def find_image_files(path, accepted_filetypes): ## Takes command line input and tuple of accepted filetypes as arguments
     good_files = []
     file_list = os.listdir(path)
     for file in file_list:
@@ -49,13 +59,6 @@ def extract_datetime(exif_data):
         if decoded == ("DateTime"): ## If the key is 'DateTime'
             datetime_str = value
             return(datetime_str)
-            """
-            date,time = datetime_str.split() ## Split the value by the space
-            year,month,day = date.split(":") 
-            hour,minute,second = time.split(":")
-            datetime = [year, month, day, hour, minute, second] ## Turns the data into a list going from year to second, left to right
-            return(datetime)
-            """
 
 ## Function for extracting GPS information from exif data 
 def extract_gps(exif_data):
@@ -79,14 +82,6 @@ def sort_files(file_dictionary, datetime):
             if value == date:
                 sorted_filenames.append(key)
     return sorted_filenames
-    
-    '''
-    for key in exif_table["GPSInfo"].keys():
-        decode = GPSTAGS.get(key,key)
-        gps_info[decode] = exif_table['GPSInfo'][key]
-    print (gpsinfo)
-    '''
-image1 = ("test_data/image1.heic")
 
 parser = argparse.ArgumentParser()
 
@@ -112,4 +107,4 @@ for file in good_files:
     file_exif_data = exif_data(file)
     file_datetime = extract_datetime(file_exif_data)
     files_by_date[file] = file_datetime
-print(sort_files(files_by_date, datetime))
+sort_files(files_by_date, datetime)
