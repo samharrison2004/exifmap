@@ -66,7 +66,7 @@ def extract_gps(exif_data):
         exif_table[decoded] = value
 
 def sort_files(file_dictionary, datetime):
-    print(file_dictionary)
+    ##print(file_dictionary)
     sorted_filenames = []
     datetime_format = ("%Y:%m:%d %H:%M:%S") ## The format the exif datetime comes in
     sorted_dates = [date for date in sorted(file_dictionary.values(), key = lambda x: datetime.strptime(x,datetime_format))]
@@ -79,7 +79,7 @@ def sort_files(file_dictionary, datetime):
 parser = argparse.ArgumentParser()
 
 ## Argument for selecting the path of the folder containing the images the user wants to extract GPS data from. If none is provided exifmap will use the current working directory
-parser.add_argument("-f","--folderpath", type=str, help = "The path of the folder containing the image files you wish to use. If not specified, exifmap will search in the current working directory")
+parser.add_argument("-F","--folderpath", type=str, help = "The path of the folder containing the image files you wish to use. If not specified, exifmap will search in the current working directory")
 
 ## Argument for naming a file to output the polyline string to. If the flag is selected, the program will save the polyline to a text file named polyline.txt, unless the user specifies otherwise
 parser.add_argument("-p","--polyline", type=str, help = "Name of file to output polyline string to. If flag is used but no name is provided exifmap will name a file polyline.txt containing the polyline")
@@ -100,4 +100,5 @@ for file in good_files:
     file_exif_data = exif_data(file)
     file_datetime = extract_datetime(file_exif_data)
     files_by_date[file] = file_datetime
-sort_files(files_by_date, datetime)
+sortedf = sort_files(files_by_date, datetime)
+print(sortedf)
