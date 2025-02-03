@@ -78,6 +78,9 @@ def sort_files(file_dictionary, datetime):
 
 parser = argparse.ArgumentParser()
 
+## Argument for user to paste Mapbox API Key into on first start
+parser.add_argument("-a","--APIKey", type=str, help = "When running the program for the first time, run with this flag and your private API Key.
+
 ## Argument for selecting the path of the folder containing the images the user wants to extract GPS data from. If none is provided exifmap will use the current working directory
 parser.add_argument("-F","--folderpath", type=str, help = "The path of the folder containing the image files you wish to use. If not specified, exifmap will search in the current working directory")
 
