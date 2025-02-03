@@ -100,5 +100,8 @@ for file in good_files:
     file_exif_data = exif_data(file)
     file_datetime = extract_datetime(file_exif_data)
     files_by_date[file] = file_datetime
-sortedf = sort_files(files_by_date, datetime)
-print(sortedf)
+
+sorted_filenames_by_datetime = sort_files(files_by_date, datetime)
+
+print(sorted_filenames_by_datetime)
+print(files_by_date)
