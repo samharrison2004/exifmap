@@ -1,6 +1,6 @@
 # Do not push the API key. You need to use your own, silly goose :D
 
-API_KEY.txt
+access_token.txt
 
 # Ignore test data file
 
