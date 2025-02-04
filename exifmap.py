@@ -67,19 +67,19 @@ def extract_gps(exif_data):
 
 def sort_files(file_dictionary, datetime):
     ##print(file_dictionary)
-    sorted_filenames = []
+    sorted_filenames = {}
     datetime_format = ("%Y:%m:%d %H:%M:%S") ## The format the exif datetime comes in
     sorted_dates = [date for date in sorted(file_dictionary.values(), key = lambda x: datetime.strptime(x,datetime_format))]
     for date in sorted_dates:
         for key, value in file_dictionary.items():
             if value == date:
-                sorted_filenames.append(key)
+                sorted_filenames[key] = value
     return sorted_filenames
 
 parser = argparse.ArgumentParser()
 
 ## Argument for user to paste Mapbox API Key into on first start. Program will then save api key for futher use
-parser.add_argument("-a","--APIKey", type=str, help = "When running the program for the first time, run with this flag and your private API Key.
+parser.add_argument("-a","--APIKey", type=str, help = "When running the program for the first time, run with this flag and your private API Key.")
 
 ## Argument for selecting the path of the folder containing the images the user wants to extract GPS data from. If none is provided exifmap will use the current working directory
 parser.add_argument("-F","--folderpath", type=str, help = "The path of the folder containing the image files you wish to use. If not specified, exifmap will search in the current working directory")
@@ -107,4 +107,3 @@ for file in good_files:
 sorted_filenames_by_datetime = sort_files(files_by_date, datetime)
 
 print(sorted_filenames_by_datetime)
-print(files_by_date)
